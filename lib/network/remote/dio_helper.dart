@@ -7,7 +7,7 @@ static Dio dio;
 static init(){
   dio =Dio(
     BaseOptions(
-      baseUrl: 'http://test.vps51796.mylogin.co/exam_web/',
+      baseUrl: 'http://test.vps51796.mylogin.co/exam_web/exam.php',
       receiveDataWhenStatusError: true,
       connectTimeout:60*1000 ,
       receiveTimeout:60*1000 ,
