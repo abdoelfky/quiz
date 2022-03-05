@@ -16,7 +16,10 @@ static void getCourses(String email, ValueChanged<List<Course>> handler) async {
   FormData form=FormData.fromMap({
     'option': '2', 'email': email
   });
-  var response = await Dio().post('http://test.vps51796.mylogin.co/exam_web/exam.php', data: form);
+  var response = await Dio().post('http://test.vps51796.mylogin.co/exam_web/exam.php',
+      data: form,  onSendProgress: (int sent, int total) {
+      print('$sent $total');
+    },);
   // print('response :  $response');
   // final parsedJson = jsonDecode(response.toString());
   // print(response.toString());
@@ -41,6 +44,7 @@ static void addCourse(String email,@required String coursename) async {
     'option': '4', 'coursename': coursename,'email':email
   });
   await Dio().post('http://test.vps51796.mylogin.co/exam_web/exam.php', data: form);
+
 }
 
 }

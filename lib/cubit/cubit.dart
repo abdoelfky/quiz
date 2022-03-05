@@ -11,35 +11,27 @@ class CoursesCubit extends Cubit<CoursesStates> {
 
   static CoursesCubit get(context) => BlocProvider.of(context);
 
-
-
   List<Course> allCourses=List.empty();
-
-
 
 void getData(){
   allCourses=[];
   emit(ShopGetDataLoadingState());
   DioHelper.getCourses('amro43210@gmail.com', (value)
   {
-
-  allCourses = value;
+  allCourses.addAll(value);
     emit(ShopGetDataSuccessState());
   });
 }
 void deleteCourse(courseID){
     emit(ShopDeleteLoadingState());
     DioHelper.deleteCourse('amro43210@gmail.com',courseID);
-    // allCourses=[];
-    getData();
     emit(ShopDeleteSuccessState());
   }
 
-void addCourse(courseName){
+Future <void> addCourse(courseName)async{
     emit(ShopAddLoadingState());
-    DioHelper.addCourse('amro43210@gmail.com',courseName);
-    // allCourses=[];
-    getData();
+    await DioHelper.addCourse('amro43210@gmail.com',courseName);
+    await getData();
     emit(ShopAddSuccessState());
   }
 }

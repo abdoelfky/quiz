@@ -61,6 +61,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                                         CupertinoDialogAction(child: Text('Delete'),
                                           onPressed:(){
                                             cubit.deleteCourse(cubit.allCourses[index].id);
+                                            cubit.allCourses.removeAt(index);
                                             Navigator.pop(context);
                                           },
                                         ),
