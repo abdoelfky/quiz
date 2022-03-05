@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quizz_app/cash_helper.dart';
+import 'modules/InstructorHome.dart';
+import 'network/local/cash_helper.dart';
 import 'package:quizz_app/cubit/cubit.dart';
-import 'package:quizz_app/dio_helper.dart';
-import 'package:quizz_app/home_layout.dart';
+import 'network/remote/dio_helper.dart';
+import 'modules/home_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async {
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context)=>CoursesCubit.get(context)..getDate(),
+      create: (BuildContext context)=>CoursesCubit()..getData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',

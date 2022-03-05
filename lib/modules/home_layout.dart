@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:quizz_app/Course.dart';
+import '../models/Course.dart';
 import 'package:quizz_app/cubit/cubit.dart';
 import 'package:quizz_app/cubit/states.dart';
 import 'package:conditional_builder/conditional_builder.dart';
@@ -14,24 +15,11 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
 
   var titleController=TextEditingController();
-  final List myList = List.generate(3, (index) {
-    return {"id": index+1, "title": "Product #$index", "price": index + 1};
-  });
-  var x;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CoursesCubit,CoursesStates>(
-      listener:(context,state)
-      {
-        // if(state is ShopLoadingState)
-        // {
-        //   x=1;
-        // }
-        if(state is ShopSuccessState)
-        {
-          x=2;
-        }
-      } ,
+      listener:(context,state) {} ,
       builder:(context,state){
 
         var cubit=CoursesCubit.get(context);
@@ -57,15 +45,36 @@ class _HomeLayoutState extends State<HomeLayout> {
                               background: Container(
                                 alignment: AlignmentDirectional.centerEnd,
                                 color:Colors.red,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: const Icon(Icons.delete,color: Colors.white,),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.delete,color: Colors.white,),
                                 ),
                               ),
                               onDismissed: (_) {
-                                setState(() {
-                                  cubit.allCourses.removeAt(index);
-                                });
+                                showDialog(
+                                    context: context,
+                                    builder: (_)=>AlertDialog(
+                                      elevation: 24.0,
+                                      title: const Text('Are You Sure?'),
+                                      content: const Text('You will not be able to recover it'),
+                                      actions: [
+                                        CupertinoDialogAction(child: Text('Delete'),
+                                          onPressed:(){
+                                            cubit.deleteCourse(cubit.allCourses[index].id);
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        CupertinoDialogAction(child: Text('Cancel'),onPressed: ()
+                                        {
+                                          cubit.getData();
+                                          Navigator.pop(context);
+                                        },),
+                                      ],
+
+                                    )
+
+                                );
+
                               },
                               direction: DismissDirection.endToStart,
                               key: UniqueKey(),
@@ -74,14 +83,17 @@ class _HomeLayoutState extends State<HomeLayout> {
 
                       },
                     ),
-                    fallback: (context)=> Padding(
-                      padding: const EdgeInsets.only(top: 100.0),
-                      child: Center(child:const Text('Please Add Course',
+                    fallback: (context)=> const Padding(
+                      padding: EdgeInsets.only(top: 100.0),
+                      child: Center(child:Text('Please Add Course',
                         style: TextStyle(fontWeight: FontWeight.w400,fontSize: 20),)),
                     )
                     ),
                   ),
                 floatingActionButton:FloatingActionButton(onPressed:(){
+                  setState(() {
+                    titleController.text='';
+                  });
                   showDialog<void>(
                     context: context,
                     builder: (BuildContext context) {
@@ -89,9 +101,9 @@ class _HomeLayoutState extends State<HomeLayout> {
                         content: Container(
                           width: 260.0,
                           height: 130.0,
-                          decoration:  BoxDecoration(
+                          decoration:  const BoxDecoration(
                             shape: BoxShape.rectangle,
-                            color: const Color(0xFFFFFF),
+                            color: Color(0xFFFFFF),
                             borderRadius:
                             BorderRadius.all( Radius.circular(32.0)),
                           ),
@@ -172,10 +184,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                                         padding: const EdgeInsets.only(top: 2.0),
                                         child: TextButton(
                                           onPressed: () {
-                                            setState(() {
-                                              cubit.allCourses.add(Course(id: "3", name:'${titleController.text}'));
-                                            });
-
+                                              cubit.addCourse('${titleController.text}');
                                             Navigator.pop(context);
                                           },
                                           child: Container(
@@ -209,7 +218,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                     },
                   );
                 },
-                  child: Icon(Icons.add),),
+                  child: const Icon(Icons.add),),
               );
 
 

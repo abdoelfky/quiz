@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
-import 'package:quizz_app/Course.dart';
+import '../models/Course.dart';
 
 class InstructorServices {
   static void getCourses(String email, ValueChanged<List<Course>> handler) async {
